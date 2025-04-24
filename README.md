@@ -26,7 +26,6 @@ A modern, responsive, and feature-rich web application built with React for brow
 - Detailed recipe view: ingredients, steps, nutritional info, images.
 - Save and manage favorite recipes.
 - Weekly meal planner with drag-and-drop support.
-- User authentication: register, login (email/password), social login (Google, Facebook).
 - Light and dark theme toggle.
 - Responsive design for mobile, tablet, and desktop.
 - Smooth animations and page transitions using Framer Motion.
@@ -86,8 +85,8 @@ npm run build
 
 Create a `.env` file in the root of `main-react`:
 
-```dotenv
-REACT_APP_API_URL=https://api.example.com
+```.env
+REACT_APP_API_URL=https://www.themealdb.com/api/json/v1/1
 ```
 
 ## Project Structure
@@ -108,7 +107,6 @@ main-react/
 │   ├── styles/
 │   ├── utils/
 │   └── index.js
-├── .env
 ├── README.md
 └── package.json
 ```
