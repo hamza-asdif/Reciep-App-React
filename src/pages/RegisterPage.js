@@ -1,90 +1,100 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { FaUser, FaEnvelope, FaLock, FaGoogle, FaFacebook, FaUserPlus } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/slices/userSlice';
-import { setNotification } from '../redux/slices/uiSlice';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import {
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaGoogle,
+  FaFacebook,
+  FaUserPlus,
+} from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../redux/slices/userSlice";
+import { setNotification } from "../redux/slices/uiSlice";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     // Simple validation
     if (!name || !email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
-    
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
-    
     if (!agreeTerms) {
-      setError('You must agree to the terms and conditions');
+      setError("You must agree to the terms and conditions");
       return;
     }
-    
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character"
+      );
+      return;
+    }
+
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // In a real app, this would be an API call to register the user
-      const user = {
-        id: '1',
-        name: name,
-        email: email,
-        avatar: null,
-      };
-      
-      dispatch(login(user));
-      dispatch(setNotification({
-        message: 'Registration successful! Welcome to TastyRecipes.',
-        type: 'success'
-      }));
-      
-      setIsLoading(false);
-      navigate('/profile');
-    }, 1000);
+    try {
+      const result = await dispatch(
+        registerUser({ email, password, name })
+      ).unwrap();
+
+      if (result.requiresEmailConfirmation) {
+        dispatch(
+          setNotification({
+            message:
+              "Registration successful! Please check your email to verify your account.",
+            type: "success",
+          })
+        );
+        navigate("/verify-email");
+      } else {
+        dispatch(
+          setNotification({
+            message: "Registration successful! Welcome to TastyRecipes.",
+            type: "success",
+          })
+        );
+        navigate("/profile");
+      }
+    } catch (err) {
+      setError(err.message || "Registration failed");
+    }
+    setIsLoading(false);
   };
-  
+
   const handleSocialRegister = (provider) => {
     setIsLoading(true);
-    
-    // Simulate API call
     setTimeout(() => {
-      // In a real app, this would be an OAuth flow
-      const user = {
-        id: '1',
-        name: 'Demo User',
-        email: 'demo@example.com',
-        avatar: null,
-      };
-      
-      dispatch(login(user));
-      dispatch(setNotification({
-        message: `Registration with ${provider} successful!`,
-        type: 'success'
-      }));
-      
       setIsLoading(false);
-      navigate('/profile');
+      setError("Social registration is not implemented yet.");
     }, 1000);
   };
-  
+
   return (
     <PageContainer
       initial={{ opacity: 0 }}
@@ -96,12 +106,13 @@ const RegisterPage = () => {
         <FormHeader>
           <FormTitle>Create an Account</FormTitle>
           <FormSubtitle>
-            Join our community of food lovers and start saving your favorite recipes!
+            Join our community of food lovers and start saving your favorite
+            recipes!
           </FormSubtitle>
         </FormHeader>
-        
+
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        
+
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <InputIcon>
@@ -115,7 +126,7 @@ const RegisterPage = () => {
               required
             />
           </FormGroup>
-          
+
           <FormGroup>
             <InputIcon>
               <FaEnvelope />
@@ -128,7 +139,7 @@ const RegisterPage = () => {
               required
             />
           </FormGroup>
-          
+
           <FormGroup>
             <InputIcon>
               <FaLock />
@@ -141,7 +152,7 @@ const RegisterPage = () => {
               required
             />
           </FormGroup>
-          
+
           <FormGroup>
             <InputIcon>
               <FaLock />
@@ -154,7 +165,7 @@ const RegisterPage = () => {
               required
             />
           </FormGroup>
-          
+
           <TermsAgreement>
             <Checkbox
               type="checkbox"
@@ -164,43 +175,43 @@ const RegisterPage = () => {
               required
             />
             <CheckboxLabel htmlFor="agree-terms">
-              I agree to the <TermsLink to="/terms">Terms of Service</TermsLink> and <TermsLink to="/privacy">Privacy Policy</TermsLink>
+              I agree to the <TermsLink to="/terms">Terms of Service</TermsLink>{" "}
+              and <TermsLink to="/privacy">Privacy Policy</TermsLink>
             </CheckboxLabel>
           </TermsAgreement>
-          
+
           <SubmitButton type="submit" disabled={isLoading}>
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+            {isLoading ? "Creating Account..." : "Create Account"}
             <FaUserPlus />
           </SubmitButton>
         </Form>
-        
+
         <Divider>
           <DividerText>or register with</DividerText>
         </Divider>
-        
+
         <SocialButtons>
           <SocialButton
             type="button"
-            onClick={() => handleSocialRegister('Google')}
+            onClick={() => handleSocialRegister("Google")}
             disabled={isLoading}
           >
             <FaGoogle />
             <span>Google</span>
           </SocialButton>
-          
+
           <SocialButton
             type="button"
-            onClick={() => handleSocialRegister('Facebook')}
+            onClick={() => handleSocialRegister("Facebook")}
             disabled={isLoading}
           >
             <FaFacebook />
             <span>Facebook</span>
           </SocialButton>
         </SocialButtons>
-        
+
         <LoginPrompt>
-          Already have an account?{' '}
-          <LoginLink to="/login">Login</LoginLink>
+          Already have an account? <LoginLink to="/login">Login</LoginLink>
         </LoginPrompt>
       </FormContainer>
     </PageContainer>
@@ -222,7 +233,7 @@ const FormContainer = styled.div`
   border-radius: var(--radius-lg);
   padding: 2.5rem;
   box-shadow: var(--shadow-md);
-  
+
   @media (max-width: 576px) {
     padding: 2rem 1.5rem;
   }
@@ -282,12 +293,12 @@ const Input = styled.input`
   font-size: 0.875rem;
   color: var(--color-text);
   transition: border-color var(--transition-fast);
-  
+
   &:focus {
     outline: none;
     border-color: var(--color-primary);
   }
-  
+
   &::placeholder {
     color: var(--color-text-light);
   }
@@ -309,13 +320,13 @@ const Checkbox = styled.input`
   cursor: pointer;
   position: relative;
   margin-top: 2px;
-  
+
   &:checked {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-    
+
     &:after {
-      content: '✓';
+      content: "✓";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -335,7 +346,7 @@ const CheckboxLabel = styled.label`
 const TermsLink = styled(Link)`
   color: var(--color-primary);
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -356,11 +367,11 @@ const SubmitButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background-color var(--transition-fast);
-  
+
   &:hover {
     background-color: var(--color-primary-dark);
   }
-  
+
   &:disabled {
     background-color: var(--color-border);
     cursor: not-allowed;
@@ -371,9 +382,9 @@ const Divider = styled.div`
   position: relative;
   text-align: center;
   margin: 1.5rem 0;
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 0;
@@ -411,16 +422,16 @@ const SocialButton = styled.button`
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color var(--transition-fast);
-  
+
   &:hover {
     background-color: var(--color-border);
   }
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.7;
   }
-  
+
   svg {
     font-size: 1rem;
   }
@@ -436,7 +447,7 @@ const LoginLink = styled(Link)`
   color: var(--color-primary);
   font-weight: 600;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }

@@ -213,6 +213,7 @@ const SearchButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: auto;
   gap: 0.75rem;
   background-color: var(--color-primary);
   color: white;

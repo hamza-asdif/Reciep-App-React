@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -16,10 +16,24 @@ const ProfilePage = () => {
   const favorites = useSelector(selectFavorites);
   
   // If not authenticated, redirect to login
-  if (!isAuthenticated) {
+  const checkStatus =  () => {
+    if (!isAuthenticated) {
     navigate('/login');
+    console.log("not login")
     return null;
+   }
   }
+
+  useEffect( () => {
+    checkStatus()
+
+    if(!checkStatus){
+      dispatch(setNotification( {
+        message: "You're not LogIn - go for login pls",
+        type: "error"
+      } ))
+    }
+  }, [] )
   
   const handleToggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';

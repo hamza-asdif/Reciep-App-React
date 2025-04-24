@@ -1,11 +1,19 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { FaSearch, FaHeart, FaCalendarAlt, FaUser, FaMoon, FaSun, FaBars } from 'react-icons/fa';
-import { toggleSidebar } from '../../redux/slices/uiSlice';
-import { selectTheme, setTheme } from '../../redux/slices/userSlice';
-import { openSearchModal } from '../../redux/slices/uiSlice';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  FaSearch,
+  FaHeart,
+  FaCalendarAlt,
+  FaUser,
+  FaMoon,
+  FaSun,
+  FaBars,
+} from "react-icons/fa";
+import { toggleSidebar } from "../../redux/slices/uiSlice";
+import { selectTheme, setTheme } from "../../redux/slices/userSlice";
+import { openSearchModal } from "../../redux/slices/uiSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -13,7 +21,7 @@ const Header = () => {
   const theme = useSelector(selectTheme);
 
   const handleToggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+    const newTheme = theme === "light" ? "dark" : "light";
     dispatch(setTheme(newTheme));
   };
 
@@ -49,17 +57,26 @@ const Header = () => {
           <IconButton onClick={handleOpenSearch} aria-label="Search recipes">
             <FaSearch />
           </IconButton>
-          <IconButton onClick={() => navigate('/favorites')} aria-label="Favorite recipes">
+          <IconButton
+            onClick={() => navigate("/favorites")}
+            aria-label="Favorite recipes"
+          >
             <FaHeart />
           </IconButton>
-          <IconButton onClick={() => navigate('/meal-planner')} aria-label="Meal planner">
+          <IconButton
+            onClick={() => navigate("/meal-planner")}
+            aria-label="Meal planner"
+          >
             <FaCalendarAlt />
           </IconButton>
-          <IconButton onClick={() => navigate('/profile')} aria-label="User profile">
+          <IconButton
+            onClick={() => navigate("/profile")}
+            aria-label="User profile"
+          >
             <FaUser />
           </IconButton>
           <IconButton onClick={handleToggleTheme} aria-label="Toggle theme">
-            {theme === 'light' ? <FaMoon /> : <FaSun />}
+            {theme === "light" ? <FaMoon /> : <FaSun />}
           </IconButton>
         </ActionButtons>
       </HeaderContent>
@@ -99,7 +116,7 @@ const Logo = styled.h1`
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-text);
-  
+
   .primary {
     color: var(--color-primary);
   }
@@ -116,7 +133,7 @@ const MenuButton = styled.button`
   font-size: 1.2rem;
   cursor: pointer;
   display: none;
-  
+
   @media (max-width: 768px) {
     display: block;
   }
@@ -125,7 +142,7 @@ const MenuButton = styled.button`
 const NavLinks = styled.nav`
   display: flex;
   gap: 2rem;
-  
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -135,9 +152,9 @@ const NavLink = styled(Link)`
   color: var(--color-text);
   font-weight: 500;
   position: relative;
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -5px;
     left: 0;
@@ -146,8 +163,9 @@ const NavLink = styled(Link)`
     background-color: var(--color-primary);
     transition: width var(--transition-normal);
   }
-  
-  &:hover:after, &.active:after {
+
+  &:hover:after,
+  &.active:after {
     width: 100%;
   }
 `;
@@ -169,8 +187,9 @@ const IconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
-  
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast);
+
   &:hover {
     background-color: var(--color-primary-light);
     color: white;

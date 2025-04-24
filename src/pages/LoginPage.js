@@ -1,78 +1,74 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { FaEnvelope, FaLock, FaGoogle, FaFacebook, FaSignInAlt } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/slices/userSlice';
-import { setNotification } from '../redux/slices/uiSlice';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import {
+  FaEnvelope,
+  FaLock,
+  FaGoogle,
+  FaFacebook,
+  FaSignInAlt,
+} from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/slices/userSlice";
+import { setNotification } from "../redux/slices/uiSlice";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     // Simple validation
     if (!email || !password) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
-    
+
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // In a real app, this would be an API call to authenticate the user
-      const user = {
-        id: '1',
-        name: 'Demo User',
-        email: email,
-        avatar: null,
-      };
-      
-      dispatch(login(user));
-      dispatch(setNotification({
-        message: 'Login successful! Welcome back.',
-        type: 'success'
-      }));
-      
-      setIsLoading(false);
-      navigate('/profile');
-    }, 1000);
+    try {
+      const result = await dispatch(loginUser({ email, password })).unwrap();
+      if (result) {
+        dispatch(
+          setNotification({
+            message: "Login successful! Welcome back.",
+            type: "success",
+          })
+        );
+        navigate("/profile");
+      }
+    } catch (err) {
+      if (err.includes("Email not confirmed")) {
+        setError("Please verify your email address first");
+        dispatch(
+          setNotification({
+            message: "Please check your email for verification link",
+            type: "warning",
+          })
+        );
+        navigate("/verify-email");
+      } else {
+        setError("Invalid email or password");
+      }
+    }
+    setIsLoading(false);
   };
-  
+
   const handleSocialLogin = (provider) => {
     setIsLoading(true);
-    
-    // Simulate API call
     setTimeout(() => {
-      // In a real app, this would be an OAuth flow
-      const user = {
-        id: '1',
-        name: 'Demo User',
-        email: 'demo@example.com',
-        avatar: null,
-      };
-      
-      dispatch(login(user));
-      dispatch(setNotification({
-        message: `Login with ${provider} successful!`,
-        type: 'success'
-      }));
-      
       setIsLoading(false);
-      navigate('/profile');
+      setError("Social login is not implemented yet.");
     }, 1000);
   };
-  
+
   return (
     <PageContainer
       initial={{ opacity: 0 }}
@@ -87,9 +83,9 @@ const LoginPage = () => {
             Welcome back! Please enter your details to access your account.
           </FormSubtitle>
         </FormHeader>
-        
+
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        
+
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <InputIcon>
@@ -103,7 +99,7 @@ const LoginPage = () => {
               required
             />
           </FormGroup>
-          
+
           <FormGroup>
             <InputIcon>
               <FaLock />
@@ -116,7 +112,7 @@ const LoginPage = () => {
               required
             />
           </FormGroup>
-          
+
           <FormOptions>
             <RememberMe>
               <Checkbox
@@ -127,45 +123,44 @@ const LoginPage = () => {
               />
               <CheckboxLabel htmlFor="remember-me">Remember me</CheckboxLabel>
             </RememberMe>
-            
+
             <ForgotPassword to="/forgot-password">
               Forgot password?
             </ForgotPassword>
           </FormOptions>
-          
+
           <SubmitButton type="submit" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? "Logging in..." : "Login"}
             <FaSignInAlt />
           </SubmitButton>
         </Form>
-        
+
         <Divider>
           <DividerText>or continue with</DividerText>
         </Divider>
-        
+
         <SocialButtons>
           <SocialButton
             type="button"
-            onClick={() => handleSocialLogin('Google')}
+            onClick={() => handleSocialLogin("Google")}
             disabled={isLoading}
           >
             <FaGoogle />
             <span>Google</span>
           </SocialButton>
-          
+
           <SocialButton
             type="button"
-            onClick={() => handleSocialLogin('Facebook')}
+            onClick={() => handleSocialLogin("Facebook")}
             disabled={isLoading}
           >
             <FaFacebook />
             <span>Facebook</span>
           </SocialButton>
         </SocialButtons>
-        
+
         <SignupPrompt>
-          Don't have an account?{' '}
-          <SignupLink to="/register">Sign up</SignupLink>
+          Don't have an account? <SignupLink to="/register">Sign up</SignupLink>
         </SignupPrompt>
       </FormContainer>
     </PageContainer>
@@ -187,7 +182,7 @@ const FormContainer = styled.div`
   border-radius: var(--radius-lg);
   padding: 2.5rem;
   box-shadow: var(--shadow-md);
-  
+
   @media (max-width: 576px) {
     padding: 2rem 1.5rem;
   }
@@ -247,12 +242,12 @@ const Input = styled.input`
   font-size: 0.875rem;
   color: var(--color-text);
   transition: border-color var(--transition-fast);
-  
+
   &:focus {
     outline: none;
     border-color: var(--color-primary);
   }
-  
+
   &::placeholder {
     color: var(--color-text-light);
   }
@@ -279,13 +274,13 @@ const Checkbox = styled.input`
   border-radius: 4px;
   cursor: pointer;
   position: relative;
-  
+
   &:checked {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-    
+
     &:after {
-      content: '✓';
+      content: "✓";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -304,7 +299,7 @@ const CheckboxLabel = styled.label`
 const ForgotPassword = styled(Link)`
   color: var(--color-primary);
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -325,11 +320,11 @@ const SubmitButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background-color var(--transition-fast);
-  
+
   &:hover {
     background-color: var(--color-primary-dark);
   }
-  
+
   &:disabled {
     background-color: var(--color-border);
     cursor: not-allowed;
@@ -340,9 +335,9 @@ const Divider = styled.div`
   position: relative;
   text-align: center;
   margin: 1.5rem 0;
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 0;
@@ -380,16 +375,16 @@ const SocialButton = styled.button`
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color var(--transition-fast);
-  
+
   &:hover {
     background-color: var(--color-border);
   }
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.7;
   }
-  
+
   svg {
     font-size: 1rem;
   }
@@ -405,7 +400,7 @@ const SignupLink = styled(Link)`
   color: var(--color-primary);
   font-weight: 600;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
