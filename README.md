@@ -1,70 +1,132 @@
-# Getting Started with Create React App
+# Recipe React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive, and feature-rich web application built with React for browsing, searching, and organizing recipes.
 
-## Available Scripts
+![App Demo](./public/demo.png)
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the App](#running-the-app)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Authors](#authors)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Browse recipes by category: breakfast, lunch, dinner, desserts.
+- Search recipes by keyword with debounce.
+- Detailed recipe view: ingredients, steps, nutritional info, images.
+- Save and manage favorite recipes.
+- Weekly meal planner with drag-and-drop support.
+- User authentication: register, login (email/password), social login (Google, Facebook).
+- Light and dark theme toggle.
+- Responsive design for mobile, tablet, and desktop.
+- Smooth animations and page transitions using Framer Motion.
+- Global notifications and loading indicators.
+- Form validation and error handling.
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend:** React 18, React Router DOM
+- **State Management:** Redux Toolkit, Redux Thunk
+- **Styling:** Styled Components, CSS variables
+- **Animations:** Framer Motion
+- **Icons:** React Icons (Font Awesome)
+- **Build Tool:** Create React App
 
-### `npm run build`
+## Architecture
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The application follows a feature-based folder structure:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **components/**: Reusable UI components (layout, recipe cards, modals).
+- **pages/**: Route-level components (Home, Login, Profile, etc.).
+- **redux/**: State slices and store configuration.
+- **hooks/**: Custom React hooks.
+- **styles/**: Global styles and theme provider.
+- **utils/**: API client and helper functions.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+### Prerequisites
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Node.js >= 14.x
+- npm >= 6.x
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+git clone https://github.com/hamza-asdif/Recipes-ReactApp.git
+cd react-reciept-app/main-react
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Running the App
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Open http://localhost:3000 in your browser.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To build for production:
 
-### Code Splitting
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Configuration
 
-### Analyzing the Bundle Size
+Create a `.env` file in the root of `main-react`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```dotenv
+REACT_APP_API_URL=https://api.example.com
+```
 
-### Making a Progressive Web App
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+main-react/
+├── public/
+│   ├── demo.png
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── layout/
+│   │   ├── recipe/
+│   │   └── ui/
+│   ├── hooks/
+│   ├── pages/
+│   ├── redux/
+│   ├── styles/
+│   ├── utils/
+│   └── index.js
+├── .env
+├── README.md
+└── package.json
+```
 
-### Advanced Configuration
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Contributions are welcome! Please:
 
-### Deployment
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Open a pull request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Authors
+
+- Hamza Asdif – [GitHub](https://github.com/hamza-asdif)
