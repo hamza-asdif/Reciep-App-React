@@ -5,9 +5,14 @@ import { motion } from 'framer-motion';
 import { FaHeart, FaRegHeart, FaPlus } from 'react-icons/fa';
 import useRecipes from '../../hooks/useRecipes';
 
-const RecipeCard = ({ recipe, index }) => {
+const RecipeCard = ({ recipe, index = 0 }) => {
   const { toggleFavorite, isFavorite } = useRecipes();
-  const favorite = isFavorite(recipe.idMeal);
+  const favorite = recipe ? isFavorite(recipe.idMeal) : false;
+
+  // Guard clause for invalid recipe data
+  if (!recipe || !recipe.idMeal) {
+    return null;
+  }
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();
@@ -28,7 +33,7 @@ const RecipeCard = ({ recipe, index }) => {
           <FavoriteButton onClick={handleToggleFavorite}>
             {favorite ? <FaHeart className="filled" /> : <FaRegHeart />}
           </FavoriteButton>
-          <CardCategory>{recipe.strCategory}</CardCategory>
+          {recipe.strCategory && <CardCategory>{recipe.strCategory}</CardCategory>}
         </CardImageContainer>
         <CardContent>
           <CardTitle>{recipe.strMeal}</CardTitle>

@@ -73,14 +73,18 @@ const RecipeDetail = ({ recipe }) => {
         <RecipeImageContainer>
           <RecipeImage src={recipe.strMealThumb} alt={recipe.strMeal} />
           <RecipeBadges>
-            <RecipeBadge>
-              <FaGlobeAmericas />
-              <span>{recipe.strArea || 'International'}</span>
-            </RecipeBadge>
-            <RecipeBadge>
-              <FaUtensils />
-              <span>{recipe.strCategory}</span>
-            </RecipeBadge>
+            {recipe.strArea && (
+              <RecipeBadge>
+                <FaGlobeAmericas />
+                <span>{recipe.strArea}</span>
+              </RecipeBadge>
+            )}
+            {recipe.strCategory && (
+              <RecipeBadge>
+                <FaUtensils />
+                <span>{recipe.strCategory}</span>
+              </RecipeBadge>
+            )}
             {recipe.strTags && (
               <RecipeBadge>
                 <span>#{recipe.strTags.split(',')[0]}</span>
@@ -90,34 +94,40 @@ const RecipeDetail = ({ recipe }) => {
         </RecipeImageContainer>
 
         <RecipeInfo>
-          <RecipeSection>
-            <SectionTitle>Ingredients</SectionTitle>
-            <IngredientsList>
-              {ingredients.map((item, index) => (
-                <IngredientItem key={index}>
-                  <IngredientCheck type="checkbox" id={`ingredient-${index}`} />
-                  <IngredientLabel htmlFor={`ingredient-${index}`}>
-                    <IngredientMeasure>{item.measure}</IngredientMeasure>
-                    <IngredientName>{item.ingredient}</IngredientName>
-                  </IngredientLabel>
-                </IngredientItem>
-              ))}
-            </IngredientsList>
-          </RecipeSection>
+          {ingredients.length > 0 && (
+            <RecipeSection>
+              <SectionTitle>Ingredients</SectionTitle>
+              <IngredientsList>
+                {ingredients.map((item, index) => (
+                  <IngredientItem key={index}>
+                    <IngredientCheck type="checkbox" id={`ingredient-${index}`} />
+                    <IngredientLabel htmlFor={`ingredient-${index}`}>
+                      <IngredientMeasure>{item.measure}</IngredientMeasure>
+                      <IngredientName>{item.ingredient}</IngredientName>
+                    </IngredientLabel>
+                  </IngredientItem>
+                ))}
+              </IngredientsList>
+            </RecipeSection>
+          )}
 
-          <RecipeSection>
-            <SectionTitle>Instructions</SectionTitle>
-            <InstructionsList>
-              {recipe.strInstructions.split(/\r\n|\n|\r/).filter(step => step.trim() !== '').map((step, index) => (
-                <InstructionItem key={index}>
-                  <InstructionNumber>{index + 1}</InstructionNumber>
-                  <InstructionText>{step}</InstructionText>
-                </InstructionItem>
-              ))}
-            </InstructionsList>
-          </RecipeSection>
+          {recipe.strInstructions && (
+            <RecipeSection>
+              <SectionTitle>Instructions</SectionTitle>
+              <InstructionsList>
+                {recipe.strInstructions.split(/\r\n|\n|\r/)
+                  .filter(step => step.trim() !== '')
+                  .map((step, index) => (
+                    <InstructionItem key={index}>
+                      <InstructionNumber>{index + 1}</InstructionNumber>
+                      <InstructionText>{step}</InstructionText>
+                    </InstructionItem>
+                  ))}
+              </InstructionsList>
+            </RecipeSection>
+          )}
 
-          {recipe.strYoutube && (
+          {recipe.strYoutube && recipe.strYoutube.includes('v=') && (
             <RecipeSection>
               <SectionTitle>Video Tutorial</SectionTitle>
               <VideoContainer>
