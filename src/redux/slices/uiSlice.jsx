@@ -5,6 +5,8 @@ const initialState = {
   searchModalOpen: false,
   filterModalOpen: false,
   mealPlanModalOpen: false,
+  modalDay: null,
+  modalMealType: null,
   notificationMessage: null,
   notificationType: 'info', // 'info', 'success', 'warning', 'error'
   isLoading: false,
@@ -44,11 +46,15 @@ const uiSlice = createSlice({
     toggleMealPlanModal: (state) => {
       state.mealPlanModalOpen = !state.mealPlanModalOpen;
     },
-    openMealPlanModal: (state) => {
+    openMealPlanModal: (state, action) => {
       state.mealPlanModalOpen = true;
+      state.modalDay = action.payload.day;
+      state.modalMealType = action.payload.mealType;
     },
     closeMealPlanModal: (state) => {
       state.mealPlanModalOpen = false;
+      state.modalDay = null;
+      state.modalMealType = null;
     },
     setNotification: (state, action) => {
       state.notificationMessage = action.payload.message;
@@ -86,6 +92,8 @@ export const selectSidebarOpen = (state) => state.ui.sidebarOpen;
 export const selectSearchModalOpen = (state) => state.ui.searchModalOpen;
 export const selectFilterModalOpen = (state) => state.ui.filterModalOpen;
 export const selectMealPlanModalOpen = (state) => state.ui.mealPlanModalOpen;
+export const selectModalDay = (state) => state.ui.modalDay;
+export const selectModalMealType = (state) => state.ui.modalMealType;
 export const selectNotification = (state) => ({
   message: state.ui.notificationMessage,
   type: state.ui.notificationType,

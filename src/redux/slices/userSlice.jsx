@@ -24,11 +24,22 @@ const loadUserPreferences = () => {
   }
 };
 
+// Load meal plan from localStorage
+const loadMealPlan = () => {
+  try {
+    const plan = localStorage.getItem("mealPlan");
+    return plan ? JSON.parse(plan) : [];
+  } catch (error) {
+    console.error("Error loading meal plan from localStorage:", error);
+    return [];
+  }
+};
+
 const initialState = {
   user: null,
   isAuthenticated: false,
   favorites: loadFavorites(),
-  mealPlan: [],
+  mealPlan: loadMealPlan(),
   preferences: loadUserPreferences(),
   status: "idle",
   error: null,

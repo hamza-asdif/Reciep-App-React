@@ -15,25 +15,17 @@ const ProfilePage = () => {
   const theme = useSelector(selectTheme);
   const favorites = useSelector(selectFavorites);
   
-  // If not authenticated, redirect to login
-  const checkStatus =  () => {
+  useEffect(() => {
     if (!isAuthenticated) {
-    navigate('/login');
-    console.log("not login")
-    return null;
-   }
-  }
-
-  useEffect( () => {
-    checkStatus()
-
-    if(!checkStatus){
-      dispatch(setNotification( {
-        message: "You're not LogIn - go for login pls",
-        type: "error"
-      } ))
+      dispatch(
+        setNotification({
+          message: 'You must be logged in to view this page',
+          type: 'error',
+        })
+      );
+      navigate('/login');
     }
-  }, [] )
+  }, [isAuthenticated, dispatch, navigate]);
   
   const handleToggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
